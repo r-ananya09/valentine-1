@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine 💖</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: serif;
+  height: 100vh;
+  background: #ffc0cb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* pages */
+.page {
+  display: none;
+  text-align: center;
+}
+
+.page.active {
+  display: block;
+}
+
+/* images */
+img {
+  width: 220px;
+  margin-bottom: 20px;
+}
+
+/* buttons */
+button {
+  padding: 12px 28px;
+  font-size: 18px;
+  border-radius: 30px;
+  border: none;
+  margin: 10px;
+  cursor: pointer;
+}
+
+/* heart */
+.heart {
+  font-size: 70px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* battery */
+.battery {
+  width: 70px;
+  height: 120px;
+  border: 4px solid black;
+  border-radius: 10px;
+  margin: 25px auto;
+  position: relative;
+}
+
+.battery::after {
+  content: "";
+  width: 20px;
+  height: 10px;
+  background: black;
+  position: absolute;
+  top: -14px;
+  left: 22px;
+  border-radius: 3px;
+}
+
+.fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0%;
+  background: rgb(9, 246, 33);
+}
+
+/* page 3 */
+#page3 {
+  width: 100%;
+  height: 100%;
+  color: white;
+  text-shadow: 2px 2px 5px black;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+/* balloons */
+.balloon {
+  position: absolute;
+  bottom: -100px;
+  font-size: 40px;
+  animation: fly 6s linear infinite;
+}
+
+@keyframes fly {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-120vh); }
+}
+
+/* 🌸 FLOWERS */
+.flower {
+  position: absolute;
+  top: -50px;
+  font-size: 32px;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(120vh); }
+}
+
+/* 💥 BLAST */
+.blast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  font-size: 34px;
+  animation: blastOut 1.5s ease-out forwards;
+}
+
+@keyframes blastOut {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(
+      calc(-50% + var(--x) * 1px),
+      calc(-50% + var(--y) * 1px)
+    ) scale(1.5);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div id="page1" class="page active">
+  <img src="cat.png">
+  <h2 style="color:black;">Will you be my Valentine? 💕</h2><br>
+
+  <button onclick="goPage2()">Yes ❤️</button>
+  <button id="noBtn">No 😢</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="page">
+  <img src="cat 2.jpg">
+  <h3 style="color:black;">Then fill my heart with long press 💖</h3>
+
+  <div class="heart" id="heart">❤️</div>
+
+  <div class="battery">
+    <div class="fill" id="fill"></div>
+  </div>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="page">
+  <img src="varshh.jpeg">
+
+  <audio id="song" src="videoplayback.mp4"></audio>
+
+  <div class="center">
+    <h1>You’ve had my heart forever 💖</h1><br>
+    <h2>HAPPY VALENTINE'S DAY NANNA♥️
+   This was a small effort to cherish our relation hope you like it...You just make my life the best just by being in it💓 I can't put into words how much I love you🥹In my eyes you are totally "PERFECT"🫶🏻🤍
+          THANKYOU FOR ALWAYS BEING THERE FOR ME🫂💖
+       I HOPE WE ALWAYS BE TOGETHER ♾️🧿
+
+
+                  ~VARSHH🫀<br>#SH Forever 💕</h2>
+  </div>
+</div>
+
+<script>
+/* page switching */
+function goPage2() {
+  page1.classList.remove("active");
+  page2.classList.add("active");
+}
+
+/* NO button escape */
+const noBtn = document.getElementById("noBtn");
+noBtn.addEventListener("mouseover", () => {
+  noBtn.style.display = "none";
+});
+
+/* heart fill */
+let fill = document.getElementById("fill");
+let heart = document.getElementById("heart");
+let level = 0;
+let interval;
+
+heart.addEventListener("mousedown", startFill);
+heart.addEventListener("touchstart", startFill);
+heart.addEventListener("mouseup", stopFill);
+heart.addEventListener("touchend", stopFill);
+heart.addEventListener("mouseleave", stopFill);
+
+function startFill() {
+  interval = setInterval(() => {
+    if (level < 100) {
+      level += 2;
+      fill.style.height = level + "%";
+    } else {
+      clearInterval(interval);
+      page2.classList.remove("active");
+      page3.classList.add("active");
+      document.getElementById("song").play();
+
+      createBalloons();
+      createFlowers();
+      blastEffect();
+    }
+  }, 50);
+}
+
+function stopFill() {
+  clearInterval(interval);
+}
+
+/* 🎈 BALLOONS */
+function createBalloons() {
+  const emojis = ["🎈", "🎉"];
+  for (let i = 0; i < 20; i++) {
+    let b = document.createElement("div");
+    b.className = "balloon";
+    b.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+    b.style.left = Math.random() * 100 + "vw";
+    b.style.animationDuration = (4 + Math.random() * 4) + "s";
+    document.body.appendChild(b);
+  }
+}
+
+/* 🌸 FLOWERS */
+function createFlowers() {
+  const flowers = ["🌸","🌹","🌺","🌼","💐"];
+  for (let i = 0; i < 20; i++) {
+    let f = document.createElement("div");
+    f.className = "flower";
+    f.innerHTML = flowers[Math.floor(Math.random() * flowers.length)];
+    f.style.left = Math.random() * 100 + "vw";
+    f.style.animationDuration = (4 + Math.random() * 4) + "s";
+    document.body.appendChild(f);
+  }
+}
+
+/* 💥 BLAST + ✨ 💖 🎉 */
+function blastEffect() {
+  const items = ["💖","✨","🎉"];
+  for (let i = 0; i < 30; i++) {
+    let e = document.createElement("div");
+    e.className = "blast";
+    e.innerHTML = items[Math.floor(Math.random() * items.length)];
+    e.style.setProperty("--x", Math.random() * 500 - 250);
+    e.style.setProperty("--y", Math.random() * 500 - 250);
+    document.body.appendChild(e);
+    setTimeout(() => e.remove(), 1500);
+  }
+}
+</script>
+
+</body>
+</html>
